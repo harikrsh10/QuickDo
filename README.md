@@ -4,23 +4,37 @@ A minimal, always-on-top floating task widget for your desktop. Summon it instan
 
 ---
 
+## Download
+
+| Platform | Link |
+|----------|------|
+| Windows (.exe) | [Download for Windows](https://github.com/harikrsh10/QuickDo/releases/latest/download/QuickDo-Setup.exe) |
+| macOS (.dmg) | [Download for macOS](https://github.com/harikrsh10/QuickDo/releases/latest/download/QuickDo.dmg) |
+
+> Or browse all releases → [github.com/harikrsh10/QuickDo/releases](https://github.com/harikrsh10/QuickDo/releases)
+
+---
+
 ## Features
 
-- **Global shortcut** — `Ctrl+Shift+Space` (Win/Linux) / `Cmd+Shift+Space` (Mac) to toggle the widget on top of any app
+- **Global shortcut** — `Alt+Q` to toggle the widget on top of any app
 - **Tray icon** — lives in your system tray/menubar, right-click for options
-- **Add tasks** — type and press `Enter`, or click `+`
-- **Complete tasks** — tick the checkbox; completed tasks get a strikethrough and move to the Done tab
+- **Dark & light theme** — toggle with the sun/moon button in the header
+- **Add tasks** — type and press `Enter`, or click the arrow button
+- **Due times** — click the clock icon to set an optional deadline; badge turns amber when close, red when overdue
+- **Timestamps** — each task shows when it was added; completed tasks show when they were done
+- **Complete tasks** — tick the circle; completed tasks get a strikethrough and move to the Done tab
 - **Remove tasks** — hover a task and click `×`
-- **Tabs** — separate To-do and Done views
+- **Tabs** — separate Todo and Done views
 - **Progress bar** — visual completion tracking
-- **Animated** — smooth slide-in/out and completion animations
+- **Dynamic sizing** — window grows and shrinks with your task list
 - **Confetti** — when you clear your entire to-do list 🎉
 - **Persistent** — tasks saved locally, survive app restarts
 - **New Day** — clear completed tasks with one click
 
 ---
 
-## Setup
+## Run from source
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) v18+
@@ -28,10 +42,9 @@ A minimal, always-on-top floating task widget for your desktop. Summon it instan
 ### Install & Run
 
 ```bash
-# Install dependencies
+git clone https://github.com/harikrsh10/QuickDo.git
+cd QuickDo
 npm install
-
-# Start in development
 npm start
 ```
 
@@ -48,14 +61,23 @@ npm run build:mac
 
 # Linux (.AppImage + .deb)
 npm run build:linux
-
-# All platforms (requires macOS for mac builds)
-npm run build:all
 ```
 
 Built files appear in `dist/`.
 
-> **Note**: macOS builds require signing for distribution. Set up your Apple Developer certificate or build for local use with `--skip-notarize`.
+> **Note**: macOS builds require signing for distribution outside the Mac App Store.
+
+---
+
+## Releasing a new version
+
+1. Update the version in `package.json`
+2. Push a tag — the GitHub Actions workflow builds and uploads automatically:
+
+```bash
+git tag v1.0.1
+git push origin v1.0.1
+```
 
 ---
 
@@ -64,22 +86,10 @@ Built files appear in `dist/`.
 Open `src/main.js` and change the shortcut string:
 
 ```js
-globalShortcut.register("CommandOrControl+Shift+Space", toggleWindow)
+globalShortcut.register("Alt+Q", toggleWindow)
 ```
 
 Valid modifier keys: `Command` / `Ctrl` / `CommandOrControl` / `Alt` / `Shift`
-
----
-
-## Tray icon
-
-Place your icon files at:
-- `assets/icon.ico` (Windows)
-- `assets/icon.icns` (macOS)
-- `assets/icon.png` (Linux, 512×512px)
-- `assets/tray-icon.png` (16×16px tray icon, all platforms)
-
-If icons are missing, the app still works — tray icon will be blank.
 
 ---
 
@@ -87,11 +97,12 @@ If icons are missing, the app still works — tray icon will be blank.
 
 ```
 quickdo/
+├── .github/workflows/  # CI — auto-builds on tag push
 ├── src/
-│   ├── main.js        # Electron main process (window, tray, shortcuts)
-│   ├── preload.js     # Context bridge (secure IPC)
-│   ├── store.js       # File-based persistence
-│   └── index.html     # Full UI (HTML + CSS + JS, no build step)
-├── assets/            # App icons
+│   ├── main.js         # Electron main process (window, tray, shortcuts)
+│   ├── preload.js      # Context bridge (secure IPC)
+│   ├── store.js        # File-based persistence
+│   └── index.html      # Full UI (HTML + CSS + JS, no build step)
+├── assets/             # App icons
 └── package.json
 ```
